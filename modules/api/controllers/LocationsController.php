@@ -66,6 +66,8 @@ class LocationsController extends ActiveController {
 
         return [
             'data' => $dataProvider->getModels(),
+            'totalCount' => $dataProvider->getTotalCount(),
+            'currentPage' => $page,
         ];
     }
 
