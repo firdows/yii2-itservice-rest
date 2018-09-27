@@ -82,6 +82,9 @@ class LocationsController extends Controller {
     }
 
     public function actionCreate() {
+
+        // return $this->apiCreated(['test'=>'test']);
+
         $dataRequest['Location'] = Yii::$app->request->getBodyParams();
         
         if(Yii::$app->request->getBodyParams()){

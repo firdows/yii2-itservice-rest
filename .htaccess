@@ -1,6 +1,6 @@
 ### for rest
 Header always set Access-Control-Allow-Headers "authorization,content-type"
-#Header always set Access-Control-Allow-Methods "GET,HEAD,PUT,PATCH,POST,DELETE"
+Header always set Access-Control-Allow-Methods "GET,HEAD,PUT,PATCH,POST,DELETE"
 Header always set Access-Control-Allow-Origin "*"
 #Header always set Access-Control-Allow-Headers "Origin, X-Requested-With, Content-Type, Accept, Authorization"
 #Header always set Access-Control-Allow-Methods "POST, GET, OPTIONS"
