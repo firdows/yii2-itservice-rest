@@ -13,6 +13,7 @@ use yii\rest\ActiveController;
 //use yii\web\Controller;
 use yii\web\Response;
 use app\components\Controller;
+use yii\web\NotFoundHttpException;
 ###
 use app\modules\api\models\Location;
 use yii\data\ActiveDataProvider;
@@ -80,9 +81,49 @@ class LocationsController extends Controller {
         return $this->apiCollection($news);
     }
 
+    public function actionCreate() {
+        $dataRequest['Location'] = Yii::$app->request->getBodyParams();
+        
+        if(Yii::$app->request->getBodyParams()){
+            print_r(Yii::$app->request->getBodyParams());
+        }
+        
+        $model = new Location();
+        // throw new NotFoundHttpException('Resource not found');
+        if ($model->load($dataRequest) && $model->save()) {
+            return $this->apiCreated($model);
+        }
+
+        return $this->apiValidate($model->errors);
+    }
+
+    public function actionUpdate($id) {
+        $dataRequest['Location'] = Yii::$app->request->getBodyParams();
+        $model = $this->findModel($id);
+        if ($model->load($dataRequest) && $model->save()) {
+            return $this->apiUpdated($model);
+        }
+
+        return $this->apiValidate($model->errors);
+    }
+
     public function actionView($id) {
-        $news = Location::findOne(id);
-        return $this->apiCollection($news);
+        return $this->apiItem($this->findModel($id));
+    }
+
+    public function actionDelete($id) {
+        if ($this->findModel($id)->delete()) {
+            return $this->apiDeleted(true);
+        }
+        return $this->apiDeleted(false);
+    }
+
+    protected function findModel($id) {
+        if (($model = Location::findOne($id)) !== null) {
+            return $model;
+        } else {
+            throw new NotFoundHttpException('Resource not found');
+        }
     }
 
 }

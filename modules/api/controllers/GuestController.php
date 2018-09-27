@@ -60,7 +60,7 @@ class GuestController extends Controller {
     public function actionLogin() {
         $dataRequest['LoginForm'] = Yii::$app->request->post();
         $model = new LoginForm();
-        if ($model->load($dataRequest) && ($result = $model->login())) {
+        if ($model->load($dataRequest) && ($result = $model->login())) {            
             return $this->apiItem($result);
         }
 
@@ -78,8 +78,8 @@ class GuestController extends Controller {
         if ($model->load($dataRequest)) {
 
             if ($user = $model->register()) {
-                print_r($dataRequest);
-                exit();
+//                print_r($dataRequest);
+//                exit();
                 return $this->apiCreated($user);
             }
         }

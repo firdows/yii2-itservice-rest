@@ -3,7 +3,6 @@
 namespace app\components;
 
 use Firebase\JWT\JWT;
-
 use Yii;
 use yii\web\Request as WebRequest;
 
@@ -12,8 +11,7 @@ use yii\web\Request as WebRequest;
  * If there are many applications using user model in different ways - best way
  * is to use this trait only in the JWT related part.
  */
-trait UserJwt
-{
+trait UserJwt {
 
     /**
      * Store JWT token header items.
@@ -25,8 +23,7 @@ trait UserJwt
      * Getter for secret key that's used for generation of JWT
      * @return string secret key used to generate JWT
      */
-    protected static function getSecretKey()
-    {
+    protected static function getSecretKey() {
         return isset(Yii::$app->params['secretKey']) ? Yii::$app->params['secretKey'] : 'tokenDefault';
     }
 
@@ -34,8 +31,7 @@ trait UserJwt
      * Getter for expIn token that's used for generation of JWT
      * @return integer time to add expIn token used to generate JWT
      */
-    protected static function getExpireIn()
-    {
+    protected static function getExpireIn() {
         return isset(Yii::$app->params['expiresIn']) ? strtotime(Yii::$app->params['expiresIn']) : 0;
     }
 
@@ -43,8 +39,7 @@ trait UserJwt
      * Getter for "header" array that's used for generation of JWT
      * @return array JWT Header Token param, see http://jwt.io/ for details
      */
-    protected static function getHeaderToken()
-    {
+    protected static function getHeaderToken() {
         return [];
     }
 
@@ -55,8 +50,7 @@ trait UserJwt
      * @return mixed|null          User model or null if there's no user
      * @throws \yii\web\ForbiddenHttpException if anything went wrong
      */
-    public static function findIdentityByAccessToken($token, $type = null)
-    {
+    public static function findIdentityByAccessToken($token, $type = null) {
         $secret = static::getSecretKey();
 
         // Decode token and transform it into array.
@@ -67,7 +61,7 @@ trait UserJwt
             return false;
         }
 
-        static::$decodedToken = (array)$decoded;
+        static::$decodedToken = (array) $decoded;
 
         // If there's no jti param - exception
         if (!isset(static::$decodedToken['jti'])) {
@@ -87,8 +81,7 @@ trait UserJwt
      * @param  string $id if of user to search
      * @return mixed       User model
      */
-    public static function findByJTI($token)
-    {
+    public static function findByJTI($token) {
         return static::findOne(['auth_key' => $token, 'status' => self::STATUS_ACTIVE]);
     }
 
@@ -97,8 +90,7 @@ trait UserJwt
      * Override this method to set up other algorytm.
      * @return string needed algorytm
      */
-    public static function getAlgo()
-    {
+    public static function getAlgo() {
         return 'HS256';
     }
 
@@ -107,8 +99,7 @@ trait UserJwt
      * If you override this method, be sure that findByJTI is updated too
      * @return integer any unique integer identifier of user
      */
-    public function getJTI()
-    {
+    public function getJTI() {
         return $this->getAuthKey();
     }
 
@@ -116,8 +107,7 @@ trait UserJwt
      * Encodes model data to create custom JWT with model.id set in it
      * @return string encoded JWT
      */
-    public function getJWT()
-    {
+    public function getJWT() {
         // Collect all the data
         $secret = static::getSecretKey();
         $currentTime = time();
@@ -136,12 +126,15 @@ trait UserJwt
             'aud' => $hostInfo,
             'iat' => $currentTime,
             'nbf' => $currentTime,
-            'exp' => static::getExpireIn()
-        ], static::getHeaderToken());
+            'exp' => static::getExpireIn(),
+            'username' => $this->username,
+            'name' => $this->name,
+                ], static::getHeaderToken());
 
         // Set up id
         $token['jti'] = $this->getJTI();
 
         return JWT::encode($token, $secret, static::getAlgo());
     }
+
 }

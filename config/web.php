@@ -83,7 +83,7 @@ $config = [
 //                '<controller:\w+>/<id:\d+>' => '<controller>/view',
 //                '<controller:\w+>/<action:\w+>/<id:\d+>' => '<controller>/<action>',
 //                '<controller:\w+>/<action:\w+>' => '<controller>/<action>',
-                '' => 'site/index',
+//                '' => 'site/index',
                 [
                     'class' => 'yii\rest\UrlRule',
                     'controller' => ['api'],
