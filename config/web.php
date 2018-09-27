@@ -26,12 +26,34 @@ $config = [
                 'application/json' => 'yii\web\JsonParser',
             ]
         ],
+        'response' => [
+            /* Enable JSON Output: */
+            'class' => 'yii\web\Response',
+            'format' => \yii\web\Response::FORMAT_JSON,
+            'charset' => 'UTF-8',
+            'on beforeSend' => function ($event) {
+                $response = $event->sender;
+                if ($response->data !== null && is_array($response->data)) {
+                    /* delete code param */
+                    if (array_key_exists('code', $response->data)) {
+                        unset($response->data['code']);
+                    }
+
+                    /* change status to statusCode */
+                    if (array_key_exists('status', $response->data)) {
+                        $response->data['statusCode'] = $response->data['status'];
+                        unset($response->data['status']);
+                    }
+                }
+            },
+        ],
         'cache' => [
             'class' => 'yii\caching\FileCache',
         ],
         'user' => [
             'identityClass' => 'app\models\User',
-            'enableAutoLogin' => true,
+            'enableAutoLogin' => false,
+            'enableSession' => false,
         ],
         'errorHandler' => [
             'errorAction' => 'site/error',
@@ -55,12 +77,19 @@ $config = [
         'db' => $db,
         'urlManager' => [
             'enablePrettyUrl' => true,
+            'enableStrictParsing' => true,
             'showScriptName' => false,
             'rules' => [
-                '<controller:\w+>/<id:\d+>' => '<controller>/view',
-                '<controller:\w+>/<action:\w+>/<id:\d+>' => '<controller>/<action>',
-                '<controller:\w+>/<action:\w+>' => '<controller>/<action>',
-                ['class' => 'yii\rest\UrlRule', 'controller' => 'location', 'pluralize' => false],
+//                '<controller:\w+>/<id:\d+>' => '<controller>/view',
+//                '<controller:\w+>/<action:\w+>/<id:\d+>' => '<controller>/<action>',
+//                '<controller:\w+>/<action:\w+>' => '<controller>/<action>',
+                '' => 'site/index',
+                [
+                    'class' => 'yii\rest\UrlRule',
+                    'controller' => ['api'],
+                    'pluralize' => false,
+                    'extraPatterns' => require(__DIR__ . '/rules.php'),
+                ],
             ],
         ],
     ],
