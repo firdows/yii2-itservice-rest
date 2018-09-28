@@ -16,58 +16,15 @@ class Controller extends \yii\rest\Controller {
     use TraitController;
 
     /**
-     * List of allowed domains.
-     * Note: Restriction works only for AJAX (using CORS, is not secure).
-     *
-     * @return array List of domains, that can access to this API
-     */
-    public $enableCsrfValidation = false;
-
-    public static function allowedDomains() {
-        return [
-            //'*', // star allows all domains
-            'http://localhost:3000'
-        ];
-    }
-
-    /**
      * @inheritdoc
      */
     public function behaviors() {
         $behaviors = parent::behaviors();
-//        $behaviors['authenticator'] = [
-//            'class' => HttpBearerAuth::className(),
-//        ];
-//        $behaviors['corsFilter'] = [
-//            'class' => \yii\filters\Cors::className(),
-//            'cors' => [
-//                // restrict access to domains:
-////                'Origin' => static::allowedDomains(),
-////                'Access-Control-Request-Method' => ['POST'],
-////                'Access-Control-Allow-Credentials' => true,
-////                'Access-Control-Max-Age' => 3600, // Cache (seconds)
-//                'Origin' => ['*'],
-////                'Access-Control-Request-Method' => ['POST', 'PUT'],
-////                'Access-Control-Request-Headers' => ['X-Wsse'],
-////                'Access-Control-Allow-Credentials' => true,
-////                'Access-Control-Max-Age' => 3600,
-////                'Access-Control-Expose-Headers' => ['X-Pagination-Current-Page'],
-//            ],
-//        ];
-
+        $behaviors['authenticator'] = [
+            'class' => HttpBearerAuth::className(),
+        ];
         return $behaviors;
     }
-
-//    /**
-//     * @inheritdoc
-//     */
-//    public function behaviors() {
-//        $behaviors = parent::behaviors();
-//        $behaviors['authenticator'] = [
-//            'class' => HttpBearerAuth::className(),
-//        ];
-//        return $behaviors;
-//    }
 
     /**
      * Api Validate error response
@@ -123,7 +80,7 @@ class Controller extends \yii\rest\Controller {
      */
     public function apiItem($data, $message = false) {
         Yii::$app->response->statusCode = 200;
-        
+
         return [
             'statusCode' => 200,
             'message' => $message ? $message : 'Data retrieval successfully',

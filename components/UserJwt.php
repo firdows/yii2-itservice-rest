@@ -129,6 +129,7 @@ trait UserJwt {
             'exp' => static::getExpireIn(),
             'username' => $this->username,
             'name' => $this->name,
+            'user_type' => 1,
                 ], static::getHeaderToken());
 
         // Set up id

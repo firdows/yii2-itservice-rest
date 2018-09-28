@@ -11,6 +11,7 @@ use Yii;
  * @property string $doc_date
  * @property string $doc_time
  * @property int $location_id
+ * @property string $title
  * @property string $detail
  * @property string $phone
  * @property int $status
@@ -19,27 +20,26 @@ use Yii;
  * @property int $work_user_id
  * @property int $user_id
  */
-class Work extends \yii\db\ActiveRecord
-{
+class Work extends \yii\db\ActiveRecord {
+
     /**
      * {@inheritdoc}
      */
-    public static function tableName()
-    {
+    public static function tableName() {
         return 'work';
     }
 
     /**
      * {@inheritdoc}
      */
-    public function rules()
-    {
+    public function rules() {
         return [
             [['doc_date', 'doc_time', 'location_id', 'detail', 'phone', 'status', 'user_id'], 'required'],
             [['doc_date', 'status_date'], 'safe'],
             [['location_id', 'status', 'work_user_id', 'user_id'], 'integer'],
             [['detail', 'work_detail'], 'string'],
             [['doc_time'], 'string', 'max' => 5],
+            [['title'], 'string', 'max' => 50],
             [['phone'], 'string', 'max' => 50],
         ];
     }
@@ -47,13 +47,13 @@ class Work extends \yii\db\ActiveRecord
     /**
      * {@inheritdoc}
      */
-    public function attributeLabels()
-    {
+    public function attributeLabels() {
         return [
             'id' => 'ID',
             'doc_date' => 'Doc Date',
             'doc_time' => 'Doc Time',
             'location_id' => 'Location ID',
+            'detail' => 'Title',
             'detail' => 'Detail',
             'phone' => 'Phone',
             'status' => 'Status',
@@ -63,4 +63,9 @@ class Work extends \yii\db\ActiveRecord
             'user_id' => 'User ID',
         ];
     }
+
+    public function getLocation() {
+        return $this->hasOne(Location::className(), ['id' => 'location_id']);
+    }
+
 }

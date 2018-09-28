@@ -86,8 +86,8 @@ $config = [
 //                '' => 'site/index',
                 [
                     'class' => 'yii\rest\UrlRule',
-                    'controller' => ['api'],
                     'pluralize' => false,
+                    'controller' => ['api'],
                     'extraPatterns' => require(__DIR__ . '/rules.php'),
                 ],
             ],
