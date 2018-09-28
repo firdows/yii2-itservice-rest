@@ -16,11 +16,12 @@ RewriteCond %{REQUEST_METHOD} OPTIONS
 RewriteRule ^(.*)$ $1 [R=200,L]
 ### for rest
 
-RewriteCond %{REQUEST_URI} ^/(assets|css) 
+RewriteCond %{REQUEST_URI} ^/(assets|css|react) 
 RewriteRule ^assets/(.*)$ /web/assets/$1 [L]
 RewriteRule ^css/(.*)$ /web/css/$1 [L]
+RewriteRule ^react/(.*)$ /web/react/$1 [L]
 
-RewriteCond %{REQUEST_URI} !^/web/(assets|css)
+RewriteCond %{REQUEST_URI} !^/web/(assets|css|react)
 RewriteCond %{REQUEST_URI} !index.php
 RewriteCond %{REQUEST_FILENAME} !-f [OR]
 RewriteCond %{REQUEST_FILENAME} !-d

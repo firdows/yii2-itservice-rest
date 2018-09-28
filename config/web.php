@@ -7,6 +7,7 @@ $config = [
     'id' => 'basic',
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log'],
+    'layout' => 'main-react',
     'aliases' => [
         '@bower' => '@vendor/bower-asset',
         '@npm' => '@vendor/npm-asset',
@@ -26,27 +27,27 @@ $config = [
                 'application/json' => 'yii\web\JsonParser',
             ]
         ],
-        'response' => [
-            /* Enable JSON Output: */
-            'class' => 'yii\web\Response',
-            'format' => \yii\web\Response::FORMAT_JSON,
-            'charset' => 'UTF-8',
-            'on beforeSend' => function ($event) {
-                $response = $event->sender;
-                if ($response->data !== null && is_array($response->data)) {
-                    /* delete code param */
-                    if (array_key_exists('code', $response->data)) {
-                        unset($response->data['code']);
-                    }
-
-                    /* change status to statusCode */
-                    if (array_key_exists('status', $response->data)) {
-                        $response->data['statusCode'] = $response->data['status'];
-                        unset($response->data['status']);
-                    }
-                }
-            },
-        ],
+//        'response' => [
+//            /* Enable JSON Output: */
+//            'class' => 'yii\web\Response',
+//            'format' => \yii\web\Response::FORMAT_JSON,
+//            'charset' => 'UTF-8',
+//            'on beforeSend' => function ($event) {
+//                $response = $event->sender;
+//                if ($response->data !== null && is_array($response->data)) {
+//                    /* delete code param */
+//                    if (array_key_exists('code', $response->data)) {
+//                        unset($response->data['code']);
+//                    }
+//
+//                    /* change status to statusCode */
+//                    if (array_key_exists('status', $response->data)) {
+//                        $response->data['statusCode'] = $response->data['status'];
+//                        unset($response->data['status']);
+//                    }
+//                }
+//            },
+//        ],
         'cache' => [
             'class' => 'yii\caching\FileCache',
         ],
@@ -83,7 +84,7 @@ $config = [
 //                '<controller:\w+>/<id:\d+>' => '<controller>/view',
 //                '<controller:\w+>/<action:\w+>/<id:\d+>' => '<controller>/<action>',
 //                '<controller:\w+>/<action:\w+>' => '<controller>/<action>',
-//                '' => 'site/index',
+                '' => 'site/index',
                 [
                     'class' => 'yii\rest\UrlRule',
                     'pluralize' => false,
