@@ -75,6 +75,7 @@ return [
      * )
      */
     'PUT works/{id}' => 'works/update',
+    'PUT works/repair/{id}' => 'works/repair',
     /**
      * @SWG\Get(
      *     path="/v1/works/{id}",
