@@ -3,6 +3,7 @@
 namespace app\modules\api\models;
 
 use Yii;
+use app\modules\api\models\User;
 
 /**
  * This is the model class for table "work".
@@ -66,6 +67,17 @@ class Work extends \yii\db\ActiveRecord {
 
     public function getLocation() {
         return $this->hasOne(Location::className(), ['id' => 'location_id']);
+    }
+
+    public function getUser(){
+        return $this->hasOne(User::className(),['id'=>'user_id']);
+    }
+
+    public function getWorkUser(){
+        return $this->hasOne(User::className(),['id'=>'work_user_id']);
+    }
+    public static function findUser($user_id){
+        return User::findOne($user_id);
     }
 
 }

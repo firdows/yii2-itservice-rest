@@ -17,9 +17,14 @@ class WorksController extends Controller {
      * Lists all Work models.
      * @return mixed
      */
-    public function actionIndex() {
+    public function actionIndex($status=null) {
+        $model =  Work::find()
+        ->joinWith('location', true, 'LEFT JOIN')
+        ->filterWhere(['status'=>$status])
+        ->asArray();
+
         $dataProvider = new ActiveDataProvider([
-            'query' => Work::find()->joinWith('location', true, 'LEFT JOIN')->asArray(),
+            'query' => $model,
         ]);
         return $this->apiCollection($dataProvider->getModels());
         //return $this->apiCollection($models);
@@ -32,7 +37,15 @@ class WorksController extends Controller {
      * @throws NotFoundHttpException if the model cannot be found
      */
     public function actionView($id) {
-        return $this->findModel($id);
+        $model = Work::find()
+        ->joinWith(['location','user'])             
+        ->where(['work.id'=>$id])        
+        
+        ->asArray()->one();
+        // echo $model->createCommand()->getRawSql();
+        // exit();
+        $model['workUser']=Work::findUser($model['work_user_id']);
+        return $this->apiItem($model);
     }
 
     /**
@@ -76,6 +89,30 @@ class WorksController extends Controller {
         $dataRequest['Work'] = Yii::$app->request->getBodyParams();
         if ($model->load($dataRequest) && $model->save()) {
             return $this->apiUpdated($model);
+        }
+        return $this->apiUpdated($model->errors);
+    }
+
+    /**
+     * Updates an existing Work model.
+     * If update is successful, the browser will be redirected to the 'view' page.
+     * @param integer $id
+     * @return mixed
+     * @throws NotFoundHttpException if the model cannot be found
+     */
+    public function actionRepair($id) {
+        $model = $this->findModel($id);
+        $dataRequest['Work'] = Yii::$app->request->getBodyParams();
+        if ($model->load($dataRequest)){
+            if($model->work_detail){
+                $model->work_user_id = Yii::$app->user->identity->id;
+                //$model->status = 1;
+                $model->status_date = date('Y-m-d');
+            }
+
+            if($model->save()) {
+                return $this->apiUpdated($model);
+            }
         }
         return $this->apiUpdated($model->errors);
     }
